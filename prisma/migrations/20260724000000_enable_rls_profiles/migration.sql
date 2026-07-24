@@ -1,0 +1,11 @@
+-- Enable Row Level Security on the application-owned profiles table.
+--
+-- Prisma connects to Supabase PostgreSQL as the `postgres` database role,
+-- which bypasses RLS, so this does not change application query behaviour.
+-- RLS here is purely defensive: it prevents anon/authenticated Supabase key
+-- access (REST, Realtime, PostgREST) from reading or writing profile rows.
+-- The CineProspector application uses Prisma only, not Supabase data APIs,
+-- so no permissive policies are defined — the default for anon/authenticated
+-- is deny-all. Add explicit policies only if a future feature intentionally
+-- exposes profiles via the Supabase client surface.
+ALTER TABLE "profiles" ENABLE ROW LEVEL SECURITY;

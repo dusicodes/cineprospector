@@ -1,0 +1,24 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+/// Application-owned profile data keyed by Supabase Auth's `auth.users.id`.
+/// Prisma deliberately does not manage Supabase's `auth` schema.
+///
+/// `email` is a denormalized cache of the Supabase Auth user's email; Supabase
+/// Auth owns its uniqueness, not this table. A unique constraint here would
+/// break re-sign-up (new auth id, same email), email change, and orphan cleanup.
+model Profile {
+  id          String   @id @db.Uuid
+  email       String?
+  displayName String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@map("profiles")
+}
